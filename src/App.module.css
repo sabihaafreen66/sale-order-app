@@ -1,4 +1,4 @@
-/* App.module.css */
+App.module.css
 .App {
   text-align: center;
   font-family: Arial, sans-serif;
@@ -62,4 +62,5 @@
   padding: 8px;
   width: 100%;
   box-sizing: border-box;
-}
+} 
+/* App.module.css */

@@ -9,8 +9,8 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { colorMode, toggleColorMode } = useColorMode();
-  const [isToggling, setIsToggling] = useState(false); // New state to track theme toggling
-  let debounceTimeout = null; // Use let for timeout variable
+  const [isToggling, setIsToggling] = useState(false);
+  let debounceTimeout = null;
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
@@ -18,7 +18,6 @@ const Login = ({ onLogin }) => {
       toggleColorMode(storedTheme);
     }
   }, []);
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,50 +31,42 @@ const Login = ({ onLogin }) => {
   };
 
   const handleThemeToggle = () => {
-    // If currently toggling, prevent toggling again
-    if (isToggling) {
-      return;
-    }
-
-    setIsToggling(true); // Set toggling state to true
+    if (isToggling) return;
+    setIsToggling(true);
     const newTheme = colorMode === 'light' ? 'dark' : 'light';
     localStorage.setItem('theme', newTheme);
-
-    // Clear previous timeout if exists
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-
-    // Set timeout to toggle theme after 500ms
+    if (debounceTimeout) clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
       toggleColorMode(newTheme);
-      setIsToggling(false); // Reset toggling state after toggling
+      setIsToggling(false);
     }, 500);
   };
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       <div className={classes.formControl}>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username" className={classes.label}>Username</label>
         <input
           id="username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className={classes.input}
         />
       </div>
       <div className={classes.formControl}>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className={classes.label}>Password</label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={classes.input}
         />
       </div>
       {error && <p className={classes.error}>{error}</p>}
       <Button type="submit" className={classes.button} colorScheme="blue">Login</Button>
-      <Button onClick={handleThemeToggle} className={`${classes.button} ${classes.themeToggle}`} colorScheme="blue">
+      <Button onClick={handleThemeToggle} className={`${classes.button} ${classes.themeToggle}`} colorScheme="green">
         Toggle Theme
       </Button>
     </form>

@@ -1,63 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { Tab, TabList, TabPanel, TabPanels, Tabs, Flex, Spacer } from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, Button, Box } from '@chakra-ui/react';
 import SaleOrderTable from './SaleOrderTable';
-import SaleOrderForm from './SaleOrderForm'; // Import SaleOrderForm component
+import { useNavigate } from 'react-router-dom';
 
-const SaleOrderPage = () => {
+const SaleOrdersPage = () => {
   const [activeOrders, setActiveOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
   const [fetchError, setFetchError] = useState(null);
+  const navigate = useNavigate();
 
   const dummyActiveOrders = [
-    { id: 1, product: 'Product A', quantity: 10, status: 'Active' },
-    { id: 2, product: 'Product B', quantity: 5, status: 'Active' },
+    {
+      id: 1,
+      product: 'Product A',
+      quantity: 40,
+      status: 'Active',
+      customer_profile: {
+        id: 11908,
+        name: 'Ram',
+        color: [182, 73, 99]
+      }
+    },
+    {
+      id: 2,
+      product: 'Product B',
+      quantity: 45,
+      status: 'Active',
+      customer_profile: {
+        id: 11909,
+        name: 'Shyam',
+        color: [255, 0, 0]
+      }
+    }
   ];
 
   const dummyCompletedOrders = [
-    { id: 3, product: 'Product C', quantity: 20, status: 'Completed' },
-    { id: 4, product: 'Product D', quantity: 15, status: 'Completed' },
+    {
+      id: 3,
+      product: 'Product C',
+      quantity: 20,
+      status: 'Completed',
+      customer_profile: {
+        id: 11910,
+        name: 'Gita',
+        color: [0, 255, 0]
+      }
+    },
+    {
+      id: 4,
+      product: 'Product D',
+      quantity: 15,
+      status: 'Completed',
+      customer_profile: {
+        id: 11911,
+        name: 'Sita',
+        color: [0, 0, 255]
+      }
+    }
   ];
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const activeResponse = await fetch('http://localhost:3000/active-orders');
-        if (!activeResponse.ok) {
-          throw new Error(`HTTP error! status: ${activeResponse.status}`);
-        }
-        const activeData = await activeResponse.json();
-        setActiveOrders(activeData);
-
-        const completedResponse = await fetch('http://localhost:3000/completed-orders');
-        if (!completedResponse.ok) {
-          throw new Error(`HTTP error! status: ${completedResponse.status}`);
-        }
-        const completedData = await completedResponse.json();
-        setCompletedOrders(completedData);
-        setFetchError(null); // Clear any previous error
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
-        setActiveOrders(dummyActiveOrders);
-        setCompletedOrders(dummyCompletedOrders);
-        setFetchError("Failed to fetch orders. Displaying dummy data.");
-      }
-    };
-
-    fetchOrders();
+    // Replace API calls with dummy data
+    setActiveOrders(dummyActiveOrders);
+    setCompletedOrders(dummyCompletedOrders);
   }, []);
 
   return (
-    <div>
+    <Box>
       {fetchError && <p>{fetchError}</p>}
-      <Tabs>
-        <Flex>
-          <TabList>
-            <Tab>Active Sale Orders</Tab>
-            <Tab>Completed Sale Orders</Tab>
-            <Spacer />
-            <Tab>+ Sale Order</Tab> {/* New tab */}
-          </TabList>
-        </Flex>
+      <Tabs variant="enclosed">
+        <TabList>
+          <Tab>Active Sale Orders</Tab>
+          <Tab>Completed Sale Orders</Tab>
+          <Button ml="auto" colorScheme="teal" onClick={() => navigate('/add-order')}>
+            + Sale Order
+          </Button>
+        </TabList>
         <TabPanels>
           <TabPanel>
             <SaleOrderTable orders={activeOrders} />
@@ -65,14 +83,10 @@ const SaleOrderPage = () => {
           <TabPanel>
             <SaleOrderTable orders={completedOrders} />
           </TabPanel>
-          <TabPanel>
-            <SaleOrderForm /> {/* Display SaleOrderForm component when + Sale Order tab is clicked */}
-          </TabPanel>
         </TabPanels>
       </Tabs>
-    </div>
+    </Box>
   );
 };
 
-export default SaleOrderPage;
-
+export default SaleOrdersPage;

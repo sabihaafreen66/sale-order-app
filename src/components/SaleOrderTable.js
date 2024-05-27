@@ -1,31 +1,42 @@
 import React from 'react';
+import { Box, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button } from '@chakra-ui/react';
 
-const SaleOrderTable = ({ orders }) => {
-  if (!orders || orders.length === 0) {
-    return <p>No orders available</p>;
-  }
-
+const SaleOrderTable = ({ orders, onOpenEditModal }) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {orders.map((order) => (
-          <tr key={order.id}>
-            <td>{order.id}</td>
-            <td>{order.product}</td>
-            <td>{order.quantity}</td>
-            <td>{order.status}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <TableContainer>
+      <Table variant="striped" colorScheme="teal">
+        <Thead>
+          <Tr>
+            <Th>Product</Th>
+            <Th>Quantity</Th>
+            <Th>Status</Th>
+            <Th>Customer Name</Th>
+            <Th>Customer Color</Th>
+            <Th>Location</Th>
+            <Th>Profile Picture</Th>
+            <Th>Actions</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {orders.map((order) => (
+            <Tr key={order.id}>
+              <Td>{order.product}</Td>
+              <Td>{order.quantity}</Td>
+              <Td>{order.status}</Td>
+              <Td>{order.customer_profile.name}</Td>
+              <Td>{order.customer_profile.color}</Td>
+              <Td>{order.location_name}</Td>
+              <Td><img src={order.customer_profile.profile_pic} alt="Profile" /></Td>
+              <Td>
+                <Button colorScheme="blue" onClick={() => onOpenEditModal(order.id)}>
+                  Edit
+                </Button>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 };
 

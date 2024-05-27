@@ -1,40 +1,50 @@
-// SaleOrderForm.jsx
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Button, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Input, Button, VStack } from '@chakra-ui/react';
 
-const SaleOrderForm = ({ initialData, onSubmit }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: initialData || { orderName: '', quantity: 1 },
-  });
+const SaleOrderForm = ({ initialData = {}, onSubmit }) => {
+  const [product, setProduct] = useState(initialData.product || '');
+  const [quantity, setQuantity] = useState(initialData.quantity || '');
+  const [status, setStatus] = useState(initialData.status || '');
 
-  const handleFormSubmit = (data) => {
-    onSubmit(data);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({ ...initialData, product, quantity, status });
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <FormControl isInvalid={errors.orderName}>
-        <FormLabel htmlFor="orderName">Order Name</FormLabel>
-        <Input
-          id="orderName"
-          {...register('orderName', { required: 'Order name is required' })}
-        />
-        <FormErrorMessage>{errors.orderName && errors.orderName.message}</FormErrorMessage>
-      </FormControl>
-      <FormControl isInvalid={errors.quantity}>
-        <FormLabel htmlFor="quantity">Quantity</FormLabel>
-        <Input
-          id="quantity"
-          type="number"
-          {...register('quantity', { required: 'Quantity is required', min: { value: 1, message: 'Minimum quantity is 1' } })}
-        />
-        <FormErrorMessage>{errors.quantity && errors.quantity.message}</FormErrorMessage>
-      </FormControl>
-      <Button mt={4} colorScheme="teal" type="submit">
-        {initialData ? 'Update Order' : 'Add Order'}
-      </Button>
-    </form>
+    <Box bg="gray.100" p={4} borderRadius="md">
+      <form onSubmit={handleSubmit}>
+        <VStack spacing={4}>
+          <FormControl id="product">
+            <FormLabel>Product</FormLabel>
+            <Input
+              type="text"
+              value={product}
+              onChange={(e) => setProduct(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="quantity">
+            <FormLabel>Quantity</FormLabel>
+            <Input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="status">
+            <FormLabel>Status</FormLabel>
+            <Input
+              type="text"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            />
+          </FormControl>
+          <Button colorScheme="teal" type="submit">
+            Submit
+          </Button>
+        </VStack>
+      </form>
+    </Box>
   );
 };
 
