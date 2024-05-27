@@ -1,30 +1,31 @@
-// SaleOrderTable.jsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const SaleOrderTable = ({ activeOrders, completedOrders }) => {
-  // ... (logic for fetching orders from backend - not included here)
+const SaleOrderTable = ({ orders }) => {
+  if (!orders || orders.length === 0) {
+    return <p>No orders available</p>;
+  }
 
   return (
-    <div>
-      <ul className="nav nav-tabs">
-        <li className="nav-item">
-          <a className="nav-link active" href="#">Active</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#">Completed</a>
-        </li>
-      </ul>
-      <div className="tab-content">
-        <div className="tab-pane active show" id="active">
-          <h2>Active Sale Orders</h2>
-          {/* Display active orders with edit functionality */}
-        </div>
-        <div className="tab-pane" id="completed">
-          <h2>Completed Sale Orders</h2>
-          {/* Display completed orders with read-only view */}
-        </div>
-      </div>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orders.map((order) => (
+          <tr key={order.id}>
+            <td>{order.id}</td>
+            <td>{order.product}</td>
+            <td>{order.quantity}</td>
+            <td>{order.status}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

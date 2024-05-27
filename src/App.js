@@ -1,68 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './components/Login';
-import SaleOrderTable from './components/SaleOrderTable';
+import SaleOrdersPage from './components/SaleOrderPage'; // Import the SaleOrdersPage component
 import SaleOrderForm from './components/SaleOrderForm';
 import { ChakraProvider } from '@chakra-ui/react';
 import classes from './App.module.css';
 
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeOrders, setActiveOrders] = useState([]);
-  const [completedOrders, setCompletedOrders] = useState([]);
   const [editingSaleOrder, setEditingSaleOrder] = useState(null); // To store sale order object for editing
-
-  // Simulate fetching orders from backend (replace with your API call)
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const response = await fetch('http://your-api.com/orders');
-      const data = await response.json();
-      setActiveOrders(data.activeOrders);
-      setCompletedOrders(data.completedOrders);
-    };
-    if (isLoggedIn) {
-      fetchOrders();
-    }
-  }, [isLoggedIn]);
 
   const handleLogin = (loggedIn) => {
     setIsLoggedIn(loggedIn);
   };
 
-  const handleAddSaleOrder = (newOrder) => {
-    // Add logic to send new order data to backend
-    setActiveOrders([...activeOrders, newOrder]);
-    setEditingSaleOrder(null); // Close modal after adding
-  };
-
   const handleEditSaleOrder = (updatedOrder) => {
-    // Update order data in backend and state
-    const updatedActiveOrders = activeOrders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order));
-    setActiveOrders(updatedActiveOrders);
-    setEditingSaleOrder(null); // Close modal after editing
-  };
-
-  const handleOpenEditModal = (orderId) => {
-    const orderToEdit = activeOrders.find((order) => order.id === orderId);
-    setEditingSaleOrder(orderToEdit);
+    // Implement logic for handling sale order edit
   };
 
   return (
     <ChakraProvider>
-      <div className="App">
-        {isLoggedIn ? (
-          <>
-            <SaleOrderTable activeOrders={activeOrders} completedOrders={completedOrders} onOpenEditModal={handleOpenEditModal} />
-            {editingSaleOrder && (
-              <SaleOrderForm
-                initialData={editingSaleOrder}
-                onSubmit={editingSaleOrder ? handleEditSaleOrder : handleAddSaleOrder}
-              />
+      <Router>
+        <div className={classes.App}>
+          <Routes>
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            {isLoggedIn ? (
+              <>
+                <Route path="/orders" element={<SaleOrdersPage />} />
+                {editingSaleOrder && (
+                  <Route
+                    path="/edit-order/:id"
+                    element={
+                      <SaleOrderForm
+                        initialData={editingSaleOrder}
+                        onSubmit={handleEditSaleOrder}
+                      />
+                    }
+                  />
+                )}
+                <Route path="*" element={<Navigate to="/orders" />} />
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to="/login" />} />
             )}
-          </>
-        ) : (
-          <Login onLogin={handleLogin} />
-        )}
-      </div>
+          </Routes>
+        </div>
+      </Router>
     </ChakraProvider>
   );
 }
