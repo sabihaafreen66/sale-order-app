@@ -14,7 +14,7 @@ const SaleOrderTable = ({ orders, onOpenEditModal }) => {
             <Th>Customer Color</Th>
             <Th>Location</Th>
             <Th>Profile Picture</Th>
-            <Th>Actions</Th>
+            <Th>Edit/View</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -29,7 +29,7 @@ const SaleOrderTable = ({ orders, onOpenEditModal }) => {
               <Td><img src={order.customer_profile.profile_pic} alt="Profile" /></Td>
               <Td>
                 <Button colorScheme="blue" onClick={() => onOpenEditModal(order.id)}>
-                  Edit
+                 ...
                 </Button>
               </Td>
             </Tr>
