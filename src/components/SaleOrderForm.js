@@ -5,10 +5,26 @@ const SaleOrderForm = ({ initialData = {}, onSubmit }) => {
   const [product, setProduct] = useState(initialData.product || '');
   const [quantity, setQuantity] = useState(initialData.quantity || '');
   const [status, setStatus] = useState(initialData.status || '');
+  const [customerName, setCustomerName] = useState(initialData.customer_profile?.name || '');
+  const [customerColor, setCustomerColor] = useState(initialData.customer_profile?.color || '');
+  const [locationName, setLocationName] = useState(initialData.location_name || '');
+  const [profilePic, setProfilePic] = useState(initialData.customer_profile?.profile_pic || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ ...initialData, product, quantity, status });
+    onSubmit({
+      ...initialData,
+      product,
+      quantity,
+      status,
+      customer_profile: {
+        ...initialData.customer_profile,
+        name: customerName,
+        color: customerColor,
+        profile_pic: profilePic
+      },
+      location_name: locationName
+    });
   };
 
   return (
@@ -37,6 +53,38 @@ const SaleOrderForm = ({ initialData = {}, onSubmit }) => {
               type="text"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="customerName">
+            <FormLabel>Customer Name</FormLabel>
+            <Input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="customerColor">
+            <FormLabel>Customer Color</FormLabel>
+            <Input
+              type="text"
+              value={customerColor}
+              onChange={(e) => setCustomerColor(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="locationName">
+            <FormLabel>Location Name</FormLabel>
+            <Input
+              type="text"
+              value={locationName}
+              onChange={(e) => setLocationName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="profilePic">
+            <FormLabel>Profile Picture URL</FormLabel>
+            <Input
+              type="text"
+              value={profilePic}
+              onChange={(e) => setProfilePic(e.target.value)}
             />
           </FormControl>
           <Button colorScheme="teal" type="submit">

@@ -5,6 +5,7 @@ import Login from './components/Login';
 import SaleOrderPage from './components/SaleOrderPage';
 import AddOrderPage from './components/AddOrderPage';
 import classes from './App.module.css';
+import Header from './components/Header.js';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,8 +59,12 @@ function App() {
     }
   ]);
 
-  const handleLogin = (loggedIn) => {
-    setIsLoggedIn(loggedIn);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
   };
 
   const addOrder = (order) => {
@@ -69,10 +74,12 @@ function App() {
   return (
     <ChakraProvider>
       <Router>
+        <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
         <div className={classes.App}>
           <Routes>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            {isLoggedIn ? (
+            {!isLoggedIn ? (
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            ) : (
               <>
                 <Route
                   path="/orders"
@@ -84,9 +91,9 @@ function App() {
                 />
                 <Route path="*" element={<Navigate to="/orders" />} />
               </>
-            ) : (
-              <Route path="*" element={<Navigate to="/login" />} />
             )}
+            {/* Redirect to login page for unknown routes when not logged in */}
+            <Route path="*" element={isLoggedIn ? <Navigate to="/orders" /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </Router>
